@@ -3,6 +3,13 @@ import { obtenerUltimaTelemetria } from "../services/backend_api";
 import { mapTelemetryToSensors, buildKpis } from "../utils/aranetMapper";
 import SensorsTable from "../ui/SensorsTable";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBatteryThreeQuarters } from "@fortawesome/free-solid-svg-icons";
+import { faWifi } from "@fortawesome/free-solid-svg-icons";
+import { faMicrochip } from "@fortawesome/free-solid-svg-icons";
+import { faBatteryEmpty } from "@fortawesome/free-solid-svg-icons";
+
+
 const REFRESH_MS = 60_000;
 
 export default function Dashboard() {
@@ -75,8 +82,17 @@ export default function Dashboard() {
 function Kpi({ title, value }) {
   return (
     <div className="bg-white rounded-xl border p-4">
-      <div className="text-sm text-slate-500">{title}</div>
-      <div className="text-2xl font-bold">{value}</div>
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm text-slate-500">{title}</h2>
+        <div className="flex items-center space-x-4">
+          <div className={`rounded-xl p-2 ${title === "Batería promedio" ? "bg-green-500/10 text-green-400" : title === "RSSI promedio" ? "bg-blue-500/10 text-blue-400" : title === "Sensores activos" ? "bg-pink-500/10 text-pink-400" : "bg-red-500/10 text-red-400"}`}>
+            <span className="text-2xl">
+              {title === "Batería promedio" ? <FontAwesomeIcon icon={faBatteryThreeQuarters}></FontAwesomeIcon> : title === "RSSI promedio" ? <FontAwesomeIcon icon={faWifi}></FontAwesomeIcon> : title === "Sensores activos" ? <FontAwesomeIcon icon={faMicrochip}></FontAwesomeIcon> : <FontAwesomeIcon icon={faBatteryEmpty}></FontAwesomeIcon>}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="text-2xl font-bold ">{value}</div>
     </div>
   );
 }

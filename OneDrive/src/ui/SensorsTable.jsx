@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faListOl } from "@fortawesome/free-solid-svg-icons";
+
 function chipClass(tipo) {
   const base = "px-2 py-1 rounded-full text-xs font-semibold";
   if (tipo === "new") return `${base} bg-green-100 text-green-700`;
@@ -11,11 +14,25 @@ function rssiClass(rssi) {
   return "text-red-700 font-semibold";
 }
 
+function rssiClassBackground(rssi) {
+  if (rssi === null || rssi === undefined) return "bg-slate-500";
+  if (rssi >= -70) return "bg-green-700";
+  if (rssi >= -85) return "bg-amber-700";
+  return "bg-red-700";
+}
+
 function batteryClass(battery) {
   if (battery === null || battery === undefined) return "text-slate-500";
   if (battery >= 40) return "text-green-700 font-semibold";
   if (battery >= 20) return "text-amber-700 font-semibold";
   return "text-red-700 font-semibold";
+}
+
+function batteryBadgeClass(battery) {
+  if (battery >= 80) return "bg-green-500";
+  if (battery >= 60) return "bg-yellow-500";
+  if (battery >= 40) return "bg-orange-500";
+  return "bg-red-500";
 }
 
 function formatIso(iso) {
@@ -33,12 +50,17 @@ export default function SensorsTable({ sensors }) {
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-      <div className="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
-        <div>
-          <div className="font-semibold">Sensores</div>
-          <div className="text-sm text-slate-500">
-            Ordenado por última lectura (más reciente primero)
-          </div>
+      {/* Header */}
+      <div className="px-6 py-5 border-b border-gray-700/50 flex flex-col md:flex-row justify-between items-start md:items-center">
+        <div className="flex items-center mb-3 md:mb-0">
+          <FontAwesomeIcon icon={faListOl} color="blue"></FontAwesomeIcon>
+          <h2 className="text-xl font-semibold">Sensores</h2>
+          <span className="ml-3 px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm font-medium">
+            {sensorsOrdenados.length} sensores
+          </span>
+        </div>
+        <div className="text-sm text-slate-500">
+          Ordenado por última lectura (más reciente primero)
         </div>
       </div>
 
@@ -59,14 +81,35 @@ export default function SensorsTable({ sensors }) {
           <tbody>
             {sensorsOrdenados.map((s) => (
               <tr key={s.sensorId} className="border-t border-slate-100 hover:bg-slate-50">
-                <td className="px-4 py-3 font-mono">{s.sensorId}</td>
-                <td className="px-4 py-3">{formatIso(s.lastTime)}</td>
-                <td className={`px-4 py-3 ${rssiClass(s.rssi)}`}>
-                  {s.rssi ?? "-"} <span className="text-slate-400">dBm</span>
+
+                <td className="py-4 px-6">
+                  <div className="flex items-center">
+                    <div className={`w-2 h-2 rounded-full ${s.novelty === "new" ? "bg-green-500" : "bg-gray-500"} mr-3`}></div>
+                    <span className="font-medium font-mono">{s.sensorId}</span>
+                  </div>
                 </td>
-                <td className={`px-4 py-3 ${batteryClass(s.battery)}`}>
-                  {s.battery ?? "-"} <span className="text-slate-400">%</span>
+                
+                <td className="px-4 py-3 font-mono text-sm">{formatIso(s.lastTime)}</td>
+                
+                <td className="py-4 px-6">
+                  <div className="flex items-center">
+                    <div className={`${rssiClass(s.rssi)}`}>
+                      {s.rssi ?? "-"} <span className="text-slate-400">dBm</span>
+                    </div>
+                  </div>
                 </td>
+
+                <td className="py-4 px-6">
+                  <div className="flex items-center">
+                    <div className="w-16 h-6 bg-gray-700/50 rounded-full overflow-hidden mr-3">
+                      <div className={`h-full ${batteryBadgeClass(s.battery)}`} style={{ width: `${s.battery}%`}}></div>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="ml-2">{s.battery ?? "-"}%</span>
+                    </div>
+                  </div>
+                </td>
+                
                 <td className="px-4 py-3">
                   <span className={chipClass(s.novelty)}>
                     {s.novelty === "new" ? "Activo" : "Antiguo"}
