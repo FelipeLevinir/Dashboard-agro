@@ -72,8 +72,9 @@ export default function Dashboard() {
             <Kpi title="Batería baja" value={kpis.lowBattery} />
           </div>
         )}
-
-          <SensorsTable sensors={sensors} />
+          {/* <PrimeReactProvider> */}
+            <SensorsTable sensors={sensors} />
+          {/* </PrimeReactProvider> */}
       </div>
     </div>
   );

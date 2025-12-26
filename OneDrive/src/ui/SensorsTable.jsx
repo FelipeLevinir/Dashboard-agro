@@ -1,5 +1,14 @@
+import "primereact/resources/primereact.min.css";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListOl } from "@fortawesome/free-solid-svg-icons";
+import { Button } from 'primereact/button';
+
+import { useModal } from './modal/useModal';
+import { DetailSensors } from "./DetailSensors";
+
+// import { faEye } from "@fortawesome/free-solid-svg-icons";
+// import { Modal } from "./Modal";
 
 function chipClass(tipo) {
   const base = "px-2 py-1 rounded-full text-xs font-semibold";
@@ -48,6 +57,8 @@ export default function SensorsTable({ sensors }) {
     return tb - ta; // más reciente primero
   });
 
+  const { openModal } = useModal();
+
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
       {/* Header */}
@@ -75,6 +86,7 @@ export default function SensorsTable({ sensors }) {
               <th className="text-left px-4 py-3">RSSI</th>
               <th className="text-left px-4 py-3">Batería</th>
               <th className="text-left px-4 py-3">Estado</th>
+              <th className="text-left px-4 py-3">Detalles</th>
             </tr>
           </thead>
 
@@ -115,6 +127,18 @@ export default function SensorsTable({ sensors }) {
                     {s.novelty === "new" ? "Activo" : "Antiguo"}
                   </span>
                 </td>
+
+                <td className="px-4 py-3">
+                  <Button icon="pi pi-eye" onClick={
+                    () => openModal({
+                      title: s.sensorId,
+                      content: <DetailSensors sensor={s} />
+                    })
+                  }/>
+                  {/* <Modal /> */}
+                </td>
+
+
               </tr>
             ))}
 
