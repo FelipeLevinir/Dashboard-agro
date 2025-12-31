@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { obtenerUltimaTelemetria } from "../services/backend_api";
 import { mapTelemetryToSensors, buildKpis } from "../utils/aranetMapper";
 import SensorsTable from "../ui/SensorsTable";
+import { DetailSensors } from "../ui/DetailSensors.jsx";
+import { useModal } from '../ui/modal/useModal';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBatteryThreeQuarters } from "@fortawesome/free-solid-svg-icons";
@@ -49,6 +51,18 @@ export default function Dashboard() {
     };
   }, []);
 
+  const { openModal, updateModalConfig } = useModal();
+
+  const handleViewDetails = (sensor) => {
+    openModal({
+      title: sensor.sensorId,
+      content: (<DetailSensors sensor={sensor} onUpdateTitle={(newTitle) => {updateModalConfig({title: newTitle})}} onClose={() => {}} />),
+      size: 'lg',
+      hasUnssavedChanges: false,
+      isLoading: false
+    })
+  };
+
   return (
     <div>
       {loading && (
@@ -65,7 +79,7 @@ export default function Dashboard() {
 
       <div>
         {kpis && (
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
             <Kpi title="Batería promedio" value={`${kpis.avgBattery} %`} />
             <Kpi title="RSSI promedio" value={`${kpis.avgRssi} dBm`} />
             <Kpi title="Sensores activos" value={kpis.activeSensors} />
@@ -73,7 +87,7 @@ export default function Dashboard() {
           </div>
         )}
           {/* <PrimeReactProvider> */}
-            <SensorsTable sensors={sensors} />
+            <SensorsTable sensors={sensors} onViewDetails={handleViewDetails} />
           {/* </PrimeReactProvider> */}
       </div>
     </div>

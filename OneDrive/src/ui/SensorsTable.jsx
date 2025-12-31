@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListOl } from "@fortawesome/free-solid-svg-icons";
 import { Button } from 'primereact/button';
 
-import { useModal } from './modal/useModal';
-import { DetailSensors } from "./DetailSensors";
+// import { useModal } from './modal/useModal';
+// import { DetailSensors } from "./DetailSensors";
 
 // import { faEye } from "@fortawesome/free-solid-svg-icons";
 // import { Modal } from "./Modal";
@@ -50,14 +50,14 @@ function formatIso(iso) {
   return d.toLocaleString("es-CL");
 }
 
-export default function SensorsTable({ sensors }) {
+export default function SensorsTable({ sensors, onViewDetails }) {
   const sensorsOrdenados = [...sensors].sort((a, b) => {
     const ta = a.lastTime ? new Date(a.lastTime).getTime() : 0;
     const tb = b.lastTime ? new Date(b.lastTime).getTime() : 0;
     return tb - ta; // más reciente primero
   });
 
-  const { openModal } = useModal();
+  // const { openModal } = useModal();
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
@@ -130,11 +130,7 @@ export default function SensorsTable({ sensors }) {
 
                 <td className="px-4 py-3">
                   <Button icon="pi pi-eye" onClick={
-                    () => openModal({
-                      title: s.sensorId,
-                      content: <DetailSensors sensor={s} />
-                    })
-                  }/>
+                    () => onViewDetails?.(s) }/>
                   {/* <Modal /> */}
                 </td>
 

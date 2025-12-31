@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { obtenerUltimaMedida } from "../services/backend_api";
-import { useModal } from "./modal/useModal";
+// import { useModal } from "./modal/useModal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThermometerHalf, faWater, faTint, faTachometerAlt, faQuestionCircle, faChartLine, faBoltLightning, faFlask, faCube, faLayerGroup  } from "@fortawesome/free-solid-svg-icons";
@@ -16,21 +16,21 @@ function parseLocationSensor(location) {
       .filter(part => part.length > 0);
 }
 
-export const DetailSensors = ({sensor}) => {
+export const DetailSensors = ({sensor, onClose, onUpdateTitle}) => {
   const [sensorMeasurements, setSensorMeasurements] = useState([]);
   const [sensorTimeMeasurements, setSensorTimeMeasurements] = useState("");
   const [sensorGeneral, setSensorGeneral] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { updateModalConfig } = useModal();
+  // const { updateModalConfig } = useModal();
   
 
   useEffect(() => {
     let isMounted = true;
 
     const cargarDatos = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
         const data = await obtenerUltimaMedida(sensor.sensorId);
         const measurements = data.data || [];
         const timeMeasurements = data.time || "";
@@ -41,14 +41,15 @@ export const DetailSensors = ({sensor}) => {
 
         // console.log("Detalle sensor data:", parseLocationSensor(pointMeasurements));
 
+        if (onUpdateTitle){
+          onUpdateTitle(<div className="flex flex-col lg:flex-row lg:justify-between gap-4 items-center justify-between rounded-full p-2"><span className="text-2xl font-bold">{assetMeasurements}</span><span className="text-sm rounded-full p-2 bg-slate-400 text-white whitespace-nowrap">ID: {sensor.sensorId}</span></div>);
+        }
+
         setSensorGeneral({
           ...sensor,
           asset: assetMeasurements,
           point: pointMeasurements
         })
-
-        updateModalConfig({title: <div className="flex flex-col lg:flex-row lg:justify-between gap-4 items-center justify-between rounded-full p-2"><span className="text-2xl font-bold">{assetMeasurements}</span><span className="text-sm rounded-full p-2 bg-slate-400 text-white whitespace-nowrap">ID: {sensor.sensorId}</span></div>})
-
 
         if (!isMounted) return;
 
@@ -68,7 +69,7 @@ export const DetailSensors = ({sensor}) => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [sensor.sensorId, onUpdateTitle]);
 
   const getIcon = (nameMetric) => {
     const icons = {

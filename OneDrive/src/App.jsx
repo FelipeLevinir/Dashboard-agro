@@ -9,9 +9,8 @@ import Configuracion from "./pages/Configuracion";
 export default function App() {
   return (
     <div className="min-h-screen bg-slate-100">
-      <div className="flex">
-        <Sidebar />
-
+      <div className="md:flex">
+          <Sidebar />
         <main className="flex-1 p-6">
           <div className="max-w-6xl mx-auto">
             <Routes>
