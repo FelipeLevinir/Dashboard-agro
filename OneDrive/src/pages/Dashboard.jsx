@@ -4,6 +4,7 @@ import { mapTelemetryToSensors, buildKpis } from "../utils/aranetMapper";
 import SensorsTable from "../ui/SensorsTable";
 import { DetailSensors } from "../ui/DetailSensors.jsx";
 import { useModal } from '../ui/modal/useModal';
+import Topbar from "../layout/Topbar.jsx";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBatteryThreeQuarters } from "@fortawesome/free-solid-svg-icons";
@@ -57,7 +58,7 @@ export default function Dashboard() {
     openModal({
       title: sensor.sensorId,
       content: (<DetailSensors sensor={sensor} onUpdateTitle={(newTitle) => {updateModalConfig({title: newTitle})}} onClose={() => {}} />),
-      size: 'lg',
+      size: '50vw',
       hasUnssavedChanges: false,
       isLoading: false
     })
@@ -76,6 +77,8 @@ export default function Dashboard() {
           {error}
         </div>
       )}
+
+      <Topbar title="Dashboard" subtitle="Tabla de sensores" />
 
       <div>
         {kpis && (

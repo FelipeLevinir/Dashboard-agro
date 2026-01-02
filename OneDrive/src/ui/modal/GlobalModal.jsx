@@ -31,7 +31,8 @@ export const GlobalModal = () => {
         visible={isOpen}
         onHide={handleClose}
         modal
-        style={{ width: config.size === 'lg' ? '50vw' : '30vw' }}
+        maximizable
+        style={{ width: config.size }}
         closable = {!config.isLoading}
     >
         {config.isLoading ? (

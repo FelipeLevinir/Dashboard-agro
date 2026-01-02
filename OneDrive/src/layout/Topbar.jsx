@@ -1,4 +1,9 @@
+import { useAlertas } from "../hooks/useAlertas";
+
 export default function Topbar({ title, subtitle }) {
+
+  const { openAlertas } = useAlertas();
+
   return (
     <div className="flex items-center justify-between mb-6">
       <div>
@@ -7,7 +12,7 @@ export default function Topbar({ title, subtitle }) {
       </div>
 
       <div className="flex items-center gap-3">
-        <button className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-sm hover:bg-slate-50">
+        <button className="px-3 py-2 rounded-xl bg-white border border-slate-200 text-sm hover:bg-slate-50" onClick={openAlertas}>
           🔔 Alertas
         </button>
         <div className="px-3 py-2 rounded-xl bg-slate-900 text-white text-sm">

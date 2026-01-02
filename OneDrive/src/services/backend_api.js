@@ -22,7 +22,5 @@ export function obtenerAlarmasActuales() {
 }
 
 export function obtenerUltimaMedida(sensor) {
-  // const { from, to, gmtStart, gmtEnd, localStart, localEnd } = getDateRangeForAPI();
-  // console.log(from, to, gmtStart, gmtEnd, localStart, localEnd);
   return httpGetJson(`/api/aranet/measurements?sensor=${sensor}`);
 }
